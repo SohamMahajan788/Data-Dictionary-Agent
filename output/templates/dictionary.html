@@ -1,0 +1,414 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{{ report_title }}</title>
+  <style>
+    :root {
+      --bg: #f4f6fb;
+      --surface: #ffffff;
+      --ink: #1f2937;
+      --muted: #6b7280;
+      --border: #e5e7eb;
+      --sidebar: #0f172a;
+      --sidebar-ink: #e2e8f0;
+      --good-bg: #dcfce7;
+      --good-fg: #166534;
+      --warn-bg: #fef3c7;
+      --warn-fg: #92400e;
+      --bad-bg: #fee2e2;
+      --bad-fg: #991b1b;
+      --pii-bg: #ef4444;
+      --pii-fg: #ffffff;
+      --card-shadow: 0 6px 20px rgba(15, 23, 42, 0.08);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", Tahoma, Arial, sans-serif;
+      color: var(--ink);
+      background: var(--bg);
+      line-height: 1.45;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 290px 1fr;
+      min-height: 100vh;
+    }
+
+    .sidebar {
+      background: var(--sidebar);
+      color: var(--sidebar-ink);
+      padding: 24px 18px;
+      position: sticky;
+      top: 0;
+      max-height: 100vh;
+      overflow-y: auto;
+    }
+
+    .sidebar h1 {
+      font-size: 1.05rem;
+      margin: 0 0 6px 0;
+      color: #f8fafc;
+    }
+    .sidebar .meta {
+      color: #94a3b8;
+      font-size: 0.84rem;
+      margin-bottom: 16px;
+    }
+    .sidebar h2 {
+      font-size: 0.86rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #94a3b8;
+      margin: 18px 0 10px 0;
+    }
+    .toc a {
+      display: block;
+      color: var(--sidebar-ink);
+      text-decoration: none;
+      padding: 6px 8px;
+      border-radius: 7px;
+      font-size: 0.9rem;
+      margin-bottom: 4px;
+      word-break: break-word;
+    }
+    .toc a:hover { background: rgba(148, 163, 184, 0.2); }
+
+    main {
+      padding: 28px;
+    }
+
+    .section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      padding: 18px 20px;
+      margin-bottom: 18px;
+    }
+
+    .header-title {
+      margin: 0;
+      font-size: 1.7rem;
+    }
+    .subtle {
+      color: var(--muted);
+      font-size: 0.92rem;
+      margin-top: 6px;
+    }
+
+    .stat-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 10px;
+      margin-top: 14px;
+    }
+    .stat-card {
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 12px;
+      background: #fbfdff;
+    }
+    .stat-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .stat-value {
+      font-size: 1.2rem;
+      font-weight: 700;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 999px;
+      font-size: 0.74rem;
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+      border: 1px solid transparent;
+      white-space: nowrap;
+      margin-right: 6px;
+      margin-top: 4px;
+    }
+    .badge.good { background: var(--good-bg); color: var(--good-fg); border-color: #bbf7d0; }
+    .badge.warn { background: var(--warn-bg); color: var(--warn-fg); border-color: #fde68a; }
+    .badge.bad { background: var(--bad-bg); color: var(--bad-fg); border-color: #fecaca; }
+    .badge.pii { background: var(--pii-bg); color: var(--pii-fg); border-color: #fca5a5; }
+    .badge.neutral { background: #eef2ff; color: #3730a3; border-color: #c7d2fe; }
+
+    h2, h3, h4 {
+      margin-top: 0;
+      margin-bottom: 8px;
+    }
+    .table-title-row {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      font-size: 0.9rem;
+      table-layout: fixed;
+    }
+    th, td {
+      border: 1px solid var(--border);
+      padding: 8px 9px;
+      vertical-align: top;
+      word-break: break-word;
+    }
+    th {
+      background: #f8fafc;
+      text-align: left;
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      color: #334155;
+    }
+    td code {
+      font-family: Consolas, "Courier New", monospace;
+      font-size: 0.82rem;
+      background: #eef2ff;
+      border: 1px solid #e0e7ff;
+      border-radius: 6px;
+      padding: 1px 5px;
+      color: #312e81;
+    }
+    .small { font-size: 0.83rem; color: var(--muted); }
+    ul.clean {
+      margin: 8px 0 0 0;
+      padding-left: 18px;
+    }
+    ul.clean li { margin: 4px 0; }
+
+    .mono { font-family: Consolas, "Courier New", monospace; }
+    .muted { color: var(--muted); }
+
+    @media print {
+      .layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      main { padding: 0; }
+      .section { box-shadow: none; page-break-inside: avoid; }
+      a { color: inherit; text-decoration: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="layout">
+    <aside class="sidebar">
+      <h1>{{ report_title }}</h1>
+      <div class="meta">
+        Generated: {{ generated_at }}<br />
+        Runtime: {{ "%.2f"|format(pipeline_duration) }}s
+      </div>
+
+      <h2>Sections</h2>
+      <nav class="toc">
+        <a href="#overview">Overview</a>
+        {% if include_quality_section %}
+        <a href="#quality-summary">Quality Summary</a>
+        {% endif %}
+        {% if include_relationships_section %}
+        <a href="#relationships-overview">Relationships Overview</a>
+        {% endif %}
+        {% if include_pii_section %}
+        <a href="#pii-overview">PII Overview</a>
+        {% endif %}
+      </nav>
+
+      <h2>Tables</h2>
+      <nav class="toc">
+        {% for t in tables %}
+        <a href="#table-{{ t.anchor }}">{{ t.name }}</a>
+        {% endfor %}
+      </nav>
+    </aside>
+
+    <main>
+      <section class="section" id="overview">
+        <h2 class="header-title">{{ report_title }}</h2>
+        {% if include_llm_summaries and database_description %}
+        <p>{{ database_description }}</p>
+        {% else %}
+        <p class="muted">Business-level database summary unavailable.</p>
+        {% endif %}
+        <p class="subtle">
+          Domain:
+          {% if include_llm_summaries and business_domain %}
+            <span class="mono">{{ business_domain }}</span>
+          {% else %}
+            <span class="muted">Unknown</span>
+          {% endif %}
+        </p>
+
+        <div class="stat-grid">
+          <div class="stat-card">
+            <div class="stat-label">Total Tables</div>
+            <div class="stat-value">{{ overall_stats.total_tables }}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Total Columns</div>
+            <div class="stat-value">{{ overall_stats.total_columns }}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Overall Completeness</div>
+            <div class="stat-value">{{ "%.2f"|format(overall_stats.overall_completeness * 100) }}%</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">Relationships</div>
+            <div class="stat-value">{{ overall_stats.total_relationships }}</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label">PII Columns</div>
+            <div class="stat-value">{{ overall_stats.total_pii_columns }}</div>
+          </div>
+        </div>
+      </section>
+
+      {% if include_quality_section %}
+      <section class="section" id="quality-summary">
+        <h3>Overall Quality Summary</h3>
+        {% if quality_issues %}
+        <p class="small">Tables flagged with data-quality issues (high null-rate columns and/or duplicate sampled rows):</p>
+        <ul class="clean">
+          {% for q in quality_issues %}
+          <li>
+            <strong>{{ q.table_name }}</strong> —
+            completeness {{ "%.2f"|format(q.completeness_score * 100) }}%,
+            duplicates {{ q.duplicate_row_count }}
+          </li>
+          {% endfor %}
+        </ul>
+        {% else %}
+        <p>No quality issues flagged by profiling thresholds.</p>
+        {% endif %}
+      </section>
+      {% endif %}
+
+      {% if include_relationships_section %}
+      <section class="section" id="relationships-overview">
+        <h3>Relationships Overview</h3>
+        <p class="small">
+          Total detected relationships: {{ overall_stats.total_relationships }}
+        </p>
+      </section>
+      {% endif %}
+
+      {% if include_pii_section %}
+      <section class="section" id="pii-overview">
+        <h3>PII Overview</h3>
+        <p class="small">
+          Total flagged PII columns: {{ overall_stats.total_pii_columns }}
+        </p>
+      </section>
+      {% endif %}
+
+      {% for t in tables %}
+      <section class="section" id="table-{{ t.anchor }}">
+        <div class="table-title-row">
+          <h3>{{ t.name }}</h3>
+          <div>
+            <span class="badge {{ t.completeness_class }}">Completeness {{ "%.2f"|format(t.completeness_pct) }}%</span>
+            <span class="badge neutral">Rows {{ t.row_count }}</span>
+            <span class="badge neutral">Columns {{ t.column_count }}</span>
+            {% if t.has_data_quality_issues %}
+            <span class="badge bad">Quality Issues</span>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if include_llm_summaries %}
+          <p><strong>Description:</strong> {{ t.business_description or "N/A" }}</p>
+          <p><strong>Business purpose:</strong> {{ t.business_purpose or "N/A" }}</p>
+          <p><strong>Data quality notes:</strong> {{ t.data_quality_notes or "N/A" }}</p>
+        {% endif %}
+
+        {% if include_pii_section and t.pii_warning %}
+          <p><span class="badge pii">PII Warning</span> {{ t.pii_warning }}</p>
+        {% endif %}
+
+        <h4>Columns</h4>
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 13%">Column</th>
+              <th style="width: 10%">Type</th>
+              <th style="width: 8%">Nullable</th>
+              <th style="width: 6%">PK</th>
+              <th style="width: 6%">FK</th>
+              <th style="width: 11%">FK Ref</th>
+              <th style="width: 8%">Null Rate</th>
+              <th style="width: 12%">PII</th>
+              <th style="width: 26%">Business Description</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for c in t.columns %}
+            <tr>
+              <td><code>{{ c.name }}</code></td>
+              <td>{{ c.data_type }}</td>
+              <td>{{ c.is_nullable }}</td>
+              <td>{{ c.is_primary_key }}</td>
+              <td>{{ c.is_foreign_key }}</td>
+              <td class="small">{{ c.foreign_key_references or "-" }}</td>
+              <td>
+                <span class="badge {{ c.quality_class }}">{{ "%.2f"|format(c.null_rate_pct) }}%</span>
+              </td>
+              <td>
+                {% if include_pii_section and c.pii_findings %}
+                  {% for p in c.pii_findings %}
+                    <span class="badge pii">{{ p.pii_type }}</span>
+                  {% endfor %}
+                {% else %}
+                  <span class="small muted">-</span>
+                {% endif %}
+              </td>
+              <td>
+                {% if include_llm_summaries and c.business_description %}
+                  {{ c.business_description }}
+                {% else %}
+                  <span class="small muted">N/A</span>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+
+        {% if include_relationships_section %}
+        <h4 style="margin-top: 14px;">Relationships</h4>
+        {% if t.relationships %}
+          <ul class="clean">
+            {% for r in t.relationships %}
+            <li>
+              <code>{{ r.from_table }}.{{ r.from_column }}</code>
+              &rarr;
+              <code>{{ r.to_table }}.{{ r.to_column }}</code>
+              ({{ r.relationship_type }},
+              {% if r.is_explicit %}explicit{% else %}implicit {{ "%.2f"|format(r.confidence) }}{% endif %})
+            </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p class="small muted">No relationships recorded for this table.</p>
+        {% endif %}
+        {% endif %}
+      </section>
+      {% endfor %}
+    </main>
+  </div>
+</body>
+</html>
