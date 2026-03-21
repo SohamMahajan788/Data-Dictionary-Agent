@@ -21,6 +21,7 @@ networkx
 
 # LLM
 anthropic
+groq
 python-dotenv
 
 # Async / Queue
