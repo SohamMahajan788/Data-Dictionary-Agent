@@ -218,6 +218,9 @@
       <h2>Sections</h2>
       <nav class="toc">
         <a href="#overview">Overview</a>
+        {% if mermaid_er_diagram %}
+        <a href="#entity-relationship-diagram">Entity Relationship Diagram</a>
+        {% endif %}
         {% if include_quality_section %}
         <a href="#quality-summary">Quality Summary</a>
         {% endif %}
@@ -277,6 +280,18 @@
           </div>
         </div>
       </section>
+
+      {% if mermaid_er_diagram %}
+      <section class="section" id="entity-relationship-diagram">
+        <h2 class="header-title">Entity Relationship Diagram</h2>
+        <p class="subtle">Auto-detected table relationships</p>
+        <div class="mermaid">{{ mermaid_er_diagram | safe }}</div>
+      </section>
+      <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+      <script>
+        mermaid.initialize({ startOnLoad: true, theme: 'default', er: { diagramPadding: 20 } });
+      </script>
+      {% endif %}
 
       {% if include_quality_section %}
       <section class="section" id="quality-summary">

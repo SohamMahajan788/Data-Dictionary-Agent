@@ -95,6 +95,47 @@ def _table_summary_lookup(result: DictionaryResult) -> dict[str, object]:
     return {t.table_name: t for t in result.summary.tables}
 
 
+def _mermaid_entity_name(table_name: str) -> str:
+    """Return a Mermaid-safe entity identifier (quote if needed)."""
+    if table_name.isidentifier():
+        return table_name
+    escaped = table_name.replace("\\", "\\\\").replace('"', '\\"')
+    return f'"{escaped}"'
+
+
+def _build_mermaid_er_diagram(result: DictionaryResult) -> str | None:
+    """
+    Build Mermaid ``erDiagram`` source from relationships and schema tables.
+
+    Returns None when there are no relationships.
+    """
+    rel_map = result.relationships
+    if not rel_map.relationships:
+        return None
+
+    lines: list[str] = ["erDiagram"]
+    for rel in rel_map.relationships:
+        if rel.relationship_type == "one_to_many":
+            arrow = "||--o{"
+        elif rel.relationship_type == "many_to_many":
+            arrow = "}o--o{"
+        elif rel.relationship_type == "one_to_one":
+            arrow = "||--||"
+        else:
+            continue
+        ft = _mermaid_entity_name(rel.from_table)
+        tt = _mermaid_entity_name(rel.to_table)
+        label = rel.from_column.replace("\\", "\\\\").replace('"', '\\"')
+        lines.append(f"    {ft} {arrow} {tt} : \"{label}\"")
+
+    for ts in result.schema.tables:
+        ent = _mermaid_entity_name(ts.table_name)
+        lines.append(f"    {ent} {{")
+        lines.append("    }")
+
+    return "\n".join(lines)
+
+
 def prepare_template_context(result: DictionaryResult) -> dict:
     """
     Build the complete Jinja context from a DictionaryResult.
@@ -202,6 +243,7 @@ def prepare_template_context(result: DictionaryResult) -> dict:
             "total_pii_columns": pii_total,
         },
         "quality_issues": quality_issues,
+        "mermaid_er_diagram": _build_mermaid_er_diagram(result),
     }
     return context
 
