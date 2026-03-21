@@ -1,0 +1,502 @@
+{
+  "database_description": "This database represents a music retail or streaming service, containing information about music albums, artists, genres, and tracks, as well as customer and employee data. It appears to support operational purposes such as music sales, customer playback tracking, and human resources management. The database also includes data related to invoices, playlists, and media types.",
+  "business_domain": "Music Retail",
+  "tables": [
+    {
+      "table_name": "Album",
+      "business_description": "A collection of music albums with their titles and corresponding artists",
+      "suggested_business_name": "Music Albums",
+      "business_purpose": "To store and manage information about music albums for operational purposes",
+      "columns": [
+        {
+          "column_name": "AlbumId",
+          "business_description": "A unique identifier for each album",
+          "suggested_business_name": "Album Identifier",
+          "data_notes": null
+        },
+        {
+          "column_name": "Title",
+          "business_description": "The title of the album",
+          "suggested_business_name": "Album Title",
+          "data_notes": null
+        },
+        {
+          "column_name": "ArtistId",
+          "business_description": "The identifier of the artist who created the album",
+          "suggested_business_name": "Artist Identifier",
+          "data_notes": "Uniqueness rate is 0.588, indicating some artists have multiple albums"
+        }
+      ],
+      "data_quality_notes": "No null values or duplicate rows were found in the sample, and the table has a completeness score of 1.0000",
+      "pii_warning": null
+    },
+    {
+      "table_name": "Artist",
+      "business_description": "A collection of artists with their unique identifiers and names.",
+      "suggested_business_name": "Artist Catalogue",
+      "business_purpose": "To store and manage information about artists, serving as a reference point for other related data.",
+      "columns": [
+        {
+          "column_name": "ArtistId",
+          "business_description": "A unique identifier for each artist.",
+          "suggested_business_name": "Artist Identifier",
+          "data_notes": null
+        },
+        {
+          "column_name": "Name",
+          "business_description": "The name of the artist.",
+          "suggested_business_name": "Artist Name",
+          "data_notes": "May contain personally identifiable information."
+        }
+      ],
+      "data_quality_notes": "No null values or duplicate rows were found in the sample, indicating high data quality and completeness.",
+      "pii_warning": "The \"Name\" column may contain personally identifiable information, as indicated by the NAME rule-based flag."
+    },
+    {
+      "table_name": "Customer",
+      "business_description": "Customer information, including contact details and company data",
+      "suggested_business_name": "Customer Data",
+      "business_purpose": "To store and manage customer information for business operations",
+      "columns": [
+        {
+          "column_name": "CustomerId",
+          "business_description": "Unique identifier for each customer",
+          "suggested_business_name": "Customer ID",
+          "data_notes": null
+        },
+        {
+          "column_name": "FirstName",
+          "business_description": "First name of the customer",
+          "suggested_business_name": "First Name",
+          "data_notes": null
+        },
+        {
+          "column_name": "LastName",
+          "business_description": "Last name of the customer",
+          "suggested_business_name": "Last Name",
+          "data_notes": null
+        },
+        {
+          "column_name": "Company",
+          "business_description": "Company name of the customer",
+          "suggested_business_name": "Company Name",
+          "data_notes": "High null rate of 0.831"
+        },
+        {
+          "column_name": "Address",
+          "business_description": "Address of the customer",
+          "suggested_business_name": "Address",
+          "data_notes": null
+        },
+        {
+          "column_name": "City",
+          "business_description": "City of the customer",
+          "suggested_business_name": "City",
+          "data_notes": null
+        },
+        {
+          "column_name": "State",
+          "business_description": "State of the customer",
+          "suggested_business_name": "State",
+          "data_notes": "High null rate of 0.492"
+        },
+        {
+          "column_name": "Country",
+          "business_description": "Country of the customer",
+          "suggested_business_name": "Country",
+          "data_notes": null
+        },
+        {
+          "column_name": "PostalCode",
+          "business_description": "Postal code of the customer",
+          "suggested_business_name": "Postal Code",
+          "data_notes": null
+        },
+        {
+          "column_name": "Phone",
+          "business_description": "Phone number of the customer",
+          "suggested_business_name": "Phone Number",
+          "data_notes": null
+        },
+        {
+          "column_name": "Fax",
+          "business_description": "Fax number of the customer",
+          "suggested_business_name": "Fax Number",
+          "data_notes": "High null rate of 0.797"
+        },
+        {
+          "column_name": "Email",
+          "business_description": "Email address of the customer",
+          "suggested_business_name": "Email Address",
+          "data_notes": null
+        },
+        {
+          "column_name": "SupportRepId",
+          "business_description": "Unique identifier of the support representative assigned to the customer",
+          "suggested_business_name": "Support Representative ID",
+          "data_notes": null
+        }
+      ],
+      "data_quality_notes": "The table has a completeness score of 0.8305, with no duplicate rows. There are some columns with high null rates, such as Company and State.",
+      "pii_warning": "This table contains sensitive columns, including Email, Phone, Fax, Address, City, Country, PostalCode, FirstName, and LastName. Analysts should exercise caution when working with this data."
+    },
+    {
+      "table_name": "Employee",
+      "business_description": "This table stores information about employees within an organization.",
+      "suggested_business_name": "Employee Information",
+      "business_purpose": "To manage and track employee data for human resources and payroll purposes.",
+      "columns": [
+        {
+          "column_name": "EmployeeId",
+          "business_description": "A unique identifier for each employee.",
+          "suggested_business_name": "Employee ID",
+          "data_notes": null
+        },
+        {
+          "column_name": "LastName",
+          "business_description": "The last name of the employee.",
+          "suggested_business_name": "Last Name",
+          "data_notes": null
+        },
+        {
+          "column_name": "FirstName",
+          "business_description": "The first name of the employee.",
+          "suggested_business_name": "First Name",
+          "data_notes": null
+        },
+        {
+          "column_name": "Title",
+          "business_description": "The job title of the employee.",
+          "suggested_business_name": "Job Title",
+          "data_notes": "Some employees may have the same title."
+        },
+        {
+          "column_name": "ReportsTo",
+          "business_description": "The ID of the employee's supervisor or manager.",
+          "suggested_business_name": "Supervisor ID",
+          "data_notes": "Some employees may not have a supervisor listed."
+        },
+        {
+          "column_name": "BirthDate",
+          "business_description": "The date of birth of the employee.",
+          "suggested_business_name": "Date of Birth",
+          "data_notes": null
+        },
+        {
+          "column_name": "HireDate",
+          "business_description": "The date the employee was hired.",
+          "suggested_business_name": "Hire Date",
+          "data_notes": null
+        },
+        {
+          "column_name": "Address",
+          "business_description": "The address of the employee.",
+          "suggested_business_name": "Address",
+          "data_notes": null
+        },
+        {
+          "column_name": "City",
+          "business_description": "The city of the employee's address.",
+          "suggested_business_name": "City",
+          "data_notes": "Some employees may have the same city listed."
+        },
+        {
+          "column_name": "State",
+          "business_description": "The state of the employee's address.",
+          "suggested_business_name": "State",
+          "data_notes": "Some employees may have the same state listed."
+        },
+        {
+          "column_name": "Country",
+          "business_description": "The country of the employee's address.",
+          "suggested_business_name": "Country",
+          "data_notes": "Some employees may have the same country listed."
+        },
+        {
+          "column_name": "PostalCode",
+          "business_description": "The postal code of the employee's address.",
+          "suggested_business_name": "Postal Code",
+          "data_notes": null
+        },
+        {
+          "column_name": "Phone",
+          "business_description": "The phone number of the employee.",
+          "suggested_business_name": "Phone Number",
+          "data_notes": null
+        },
+        {
+          "column_name": "Fax",
+          "business_description": "The fax number of the employee.",
+          "suggested_business_name": "Fax Number",
+          "data_notes": null
+        },
+        {
+          "column_name": "Email",
+          "business_description": "The email address of the employee.",
+          "suggested_business_name": "Email Address",
+          "data_notes": null
+        }
+      ],
+      "data_quality_notes": "The table has a high completeness score, minimal null rates, and no duplicate rows.",
+      "pii_warning": "This table contains several sensitive columns, including employee names, addresses, phone numbers, and birth dates, which require special handling and protection."
+    },
+    {
+      "table_name": "Genre",
+      "business_description": "This table contains information about different music genres.",
+      "suggested_business_name": "Music Genres",
+      "business_purpose": "To store and manage various music genres for categorization and analysis purposes.",
+      "columns": [
+        {
+          "column_name": "GenreId",
+          "business_description": "A unique identifier for each music genre.",
+          "suggested_business_name": "Genre Identifier",
+          "data_notes": null
+        },
+        {
+          "column_name": "Name",
+          "business_description": "The name or label of the music genre.",
+          "suggested_business_name": "Genre Name",
+          "data_notes": "May contain PII, as genre names might occasionally match personal names."
+        }
+      ],
+      "data_quality_notes": "The data is complete with no nulls or duplicates, and all columns have a high uniqueness rate.",
+      "pii_warning": "The 'Name' column may contain personally identifiable information (PII) as it potentially contains names."
+    },
+    {
+      "table_name": "Invoice",
+      "business_description": "The Invoice table contains information about customer invoices, including billing addresses and totals.",
+      "suggested_business_name": "Invoices",
+      "business_purpose": "To track and manage customer invoices operationally.",
+      "columns": [
+        {
+          "column_name": "InvoiceId",
+          "business_description": "Unique identifier for each invoice.",
+          "suggested_business_name": "Invoice ID",
+          "data_notes": null
+        },
+        {
+          "column_name": "CustomerId",
+          "business_description": "The customer to whom the invoice belongs.",
+          "suggested_business_name": "Customer ID",
+          "data_notes": null
+        },
+        {
+          "column_name": "InvoiceDate",
+          "business_description": "The date the invoice was created.",
+          "suggested_business_name": "Invoice Date",
+          "data_notes": null
+        },
+        {
+          "column_name": "BillingAddress",
+          "business_description": "The customer's billing address.",
+          "suggested_business_name": "Billing Address",
+          "data_notes": "Marked as PII: LOCATION with confidence 0.90."
+        },
+        {
+          "column_name": "BillingCity",
+          "business_description": "The city of the customer's billing address.",
+          "suggested_business_name": "Billing City",
+          "data_notes": "Marked as PII: LOCATION with confidence 0.75."
+        },
+        {
+          "column_name": "BillingState",
+          "business_description": "The state of the customer's billing address.",
+          "suggested_business_name": "Billing State",
+          "data_notes": "Has a null rate of 0.490 and is marked as PII: LOCATION with confidence 0.85."
+        },
+        {
+          "column_name": "BillingCountry",
+          "business_description": "The country of the customer's billing address.",
+          "suggested_business_name": "Billing Country",
+          "data_notes": "Marked as PII: LOCATION with confidence 0.85."
+        },
+        {
+          "column_name": "BillingPostalCode",
+          "business_description": "The postal code of the customer's billing address.",
+          "suggested_business_name": "Billing Postal Code",
+          "data_notes": "Has a null rate of 0.068 and is marked as PII: LOCATION with confidence 0.75."
+        },
+        {
+          "column_name": "Total",
+          "business_description": "The total amount of the invoice.",
+          "suggested_business_name": "Invoice Total",
+          "data_notes": null
+        }
+      ],
+      "data_quality_notes": "The table has a completeness score of 0.9380, no duplicate rows, and variable null rates across columns.",
+      "pii_warning": "This table contains potentially sensitive location-based columns, including BillingAddress, BillingCity, BillingCountry, BillingPostalCode, and BillingState."
+    },
+    {
+      "table_name": "InvoiceLine",
+      "business_description": "Detail-level records of items invoiced, tracking each line item within an invoice",
+      "suggested_business_name": "Invoice Details",
+      "business_purpose": "Supporting financial transactions and order fulfillment operations by storing the constituent parts of each invoice",
+      "columns": [
+        {
+          "column_name": "InvoiceLineId",
+          "business_description": "Unique identifier for each invoice line item",
+          "suggested_business_name": "Line Item ID",
+          "data_notes": null
+        },
+        {
+          "column_name": "InvoiceId",
+          "business_description": "Identifier of the invoice to which this line item belongs",
+          "suggested_business_name": "Invoice Number",
+          "data_notes": "Relatively low uniqueness rate indicates this is a foreign key"
+        },
+        {
+          "column_name": "TrackId",
+          "business_description": "Identifier of the item being invoiced",
+          "suggested_business_name": "Product ID",
+          "data_notes": "High uniqueness rate, suggesting a wide variety of products are invoiced"
+        },
+        {
+          "column_name": "UnitPrice",
+          "business_description": "Price per unit of the item being invoiced",
+          "suggested_business_name": "Price",
+          "data_notes": "Very low uniqueness rate may indicate price standardization"
+        },
+        {
+          "column_name": "Quantity",
+          "business_description": "Number of units of the item being invoiced",
+          "suggested_business_name": "Quantity",
+          "data_notes": "No uniqueness, possibly due to the nature of this field"
+        }
+      ],
+      "data_quality_notes": "No null values, no duplicate rows, and a completeness score of 1.0 indicate high data quality",
+      "pii_warning": null
+    },
+    {
+      "table_name": "MediaType",
+      "business_description": "This table stores different types of media available in the system.",
+      "suggested_business_name": "Media Types",
+      "business_purpose": "To categorize media into distinct types for organization and retrieval purposes.",
+      "columns": [
+        {
+          "column_name": "MediaTypeId",
+          "business_description": "A unique identifier for each media type.",
+          "suggested_business_name": "Media Type ID",
+          "data_notes": null
+        },
+        {
+          "column_name": "Name",
+          "business_description": "The name or description of the media type.",
+          "suggested_business_name": "Media Type Name",
+          "data_notes": "May contain personally identifiable information (PII), specifically names."
+        }
+      ],
+      "data_quality_notes": "No null values or duplicate rows were found in the sampled data, indicating high data quality and completeness.",
+      "pii_warning": "The 'Name' column may contain personally identifiable information (PII), specifically names, with a confidence level of 0.80."
+    },
+    {
+      "table_name": "Playlist",
+      "business_description": "This table stores information about music playlists.",
+      "suggested_business_name": "Music Playlists",
+      "business_purpose": "To manage and store playlist data for music streaming or recommendation services.",
+      "columns": [
+        {
+          "column_name": "PlaylistId",
+          "business_description": "A unique identifier for each playlist.",
+          "suggested_business_name": "Playlist Identifier",
+          "data_notes": null
+        },
+        {
+          "column_name": "Name",
+          "business_description": "The name or title of the playlist.",
+          "suggested_business_name": "Playlist Name",
+          "data_notes": "May contain personally identifiable information (PII), specifically names."
+        }
+      ],
+      "data_quality_notes": "The table has no null values, no duplicate rows, and a completeness score of 1.0, indicating high data quality.",
+      "pii_warning": "The 'Name' column may contain personally identifiable information (PII), specifically names, with a confidence level of 0.80."
+    },
+    {
+      "table_name": "PlaylistTrack",
+      "business_description": "A many-to-many relationship table linking playlists and tracks",
+      "suggested_business_name": "Playlist Tracks",
+      "business_purpose": "To manage the relationships between playlists and the tracks they contain",
+      "columns": [
+        {
+          "column_name": "PlaylistId",
+          "business_description": "The identifier for the playlist",
+          "suggested_business_name": "Playlist Identifier",
+          "data_notes": "Part of the primary key, with no null values detected"
+        },
+        {
+          "column_name": "TrackId",
+          "business_description": "The identifier for the track",
+          "suggested_business_name": "Track Identifier",
+          "data_notes": "Part of the primary key, with no null values detected and a high uniqueness rate"
+        }
+      ],
+      "data_quality_notes": "No nulls or duplicates detected in the sampled data, with a table completeness score of 1.0",
+      "pii_warning": null
+    },
+    {
+      "table_name": "Track",
+      "business_description": "This table stores track information from various music albums, including details such as name, composer, duration, and pricing.",
+      "suggested_business_name": "Music Tracks",
+      "business_purpose": "To store and manage music track metadata for operational purposes such as music sales, royalties, and customer playback tracking.",
+      "columns": [
+        {
+          "column_name": "TrackId",
+          "business_description": "Unique identifier for each music track.",
+          "suggested_business_name": "Track ID",
+          "data_notes": null
+        },
+        {
+          "column_name": "Name",
+          "business_description": "The name or title of the music track.",
+          "suggested_business_name": "Track Name",
+          "data_notes": "May contain personally identifiable information."
+        },
+        {
+          "column_name": "AlbumId",
+          "business_description": "The identifier for the album to which the track belongs.",
+          "suggested_business_name": "Album ID",
+          "data_notes": null
+        },
+        {
+          "column_name": "MediaTypeId",
+          "business_description": "The type of media for the track, such as MP3 or WAV.",
+          "suggested_business_name": "Media Type",
+          "data_notes": null
+        },
+        {
+          "column_name": "GenreId",
+          "business_description": "The music genre to which the track belongs.",
+          "suggested_business_name": "Genre",
+          "data_notes": null
+        },
+        {
+          "column_name": "Composer",
+          "business_description": "The person or group who composed the music.",
+          "suggested_business_name": "Composer",
+          "data_notes": "May contain personally identifiable information and has a high null rate of 0.245."
+        },
+        {
+          "column_name": "Milliseconds",
+          "business_description": "The duration of the music track in milliseconds.",
+          "suggested_business_name": "Track Duration",
+          "data_notes": null
+        },
+        {
+          "column_name": "Bytes",
+          "business_description": "The size of the music track in bytes.",
+          "suggested_business_name": "Track Size",
+          "data_notes": null
+        },
+        {
+          "column_name": "UnitPrice",
+          "business_description": "The price per unit of the music track.",
+          "suggested_business_name": "Price",
+          "data_notes": null
+        }
+      ],
+      "data_quality_notes": "This table has a high completeness score of 0.9727, no duplicate rows, and very low null rates, indicating high data quality.",
+      "pii_warning": "This table contains columns with potential personally identifiable information (PII), such as Composer and Name, which may require special handling."
+    }
+  ],
+  "generated_at": "2026-03-21T05:31:23.114635+00:00",
+  "model_used": "llama-3.3-70b-versatile"
+}
