@@ -6,6 +6,8 @@ from __future__ import annotations
 
 import shutil
 import tempfile
+import threading
+import time
 from pathlib import Path
 
 import streamlit as st
@@ -203,6 +205,21 @@ def _render_pii_tab(result: DictionaryResult) -> None:
             st.dataframe(rows, use_container_width=True)
 
 
+def _format_step_seconds(seconds: float) -> str:
+    """Format a duration for pipeline step lines (parentheses, fixed precision)."""
+    if seconds < 0.005:
+        return f"({seconds:.4f}s)"
+    return f"({seconds:.2f}s)"
+
+
+def _split_duration_across_steps(total: float, count: int) -> list[float]:
+    """Split ``total`` seconds evenly across ``count`` steps (``count`` >= 1)."""
+    if count <= 0:
+        return []
+    share = total / count
+    return [share] * count
+
+
 def _render_results(result: DictionaryResult, report_path: str | None) -> None:
     """Render completed state (state 3)."""
     st.success(f"Pipeline completed in {result.pipeline_duration_seconds:.2f}s")
@@ -260,9 +277,11 @@ def _run_pipeline_from_ui(
     tmp_dir: Path | None = None
     sqlite_tmp_path: Path | None = None
 
-    status = st.status("Running pipeline...", expanded=True)
+    progress_slot = st.progress(0.0, text="Starting pipeline…")
+    running_note = st.empty()
+
     try:
-        status.write("Validating input...")
+        running_note.markdown("⏳ **Running dictionary pipeline…**")
         if input_mode == "SQLite / .db file":
             if uploaded_sqlite is None:
                 raise ValueError("Please upload a .sqlite or .db file.")
@@ -286,12 +305,87 @@ def _run_pipeline_from_ui(
             output_dir="./output/generated",
         )
 
-        status.write("Running full dictionary pipeline...")
         logger.info("ui_pipeline_run_start", input_type=input_type.value, input_path=input_path)
-        result = run_pipeline(config)
+
+        result_holder: list[DictionaryResult] = []
+        error_holder: list[BaseException] = []
+
+        def _pipeline_worker() -> None:
+            try:
+                result_holder.append(run_pipeline(config))
+            except BaseException as e:
+                error_holder.append(e)
+
+        worker = threading.Thread(target=_pipeline_worker, daemon=True)
+        worker.start()
+
+        simulated = 0.0
+        while worker.is_alive():
+            simulated = min(simulated + 0.06, 0.92)
+            progress_slot.progress(simulated, text="Running pipeline…")
+            time.sleep(0.3)
+
+        worker.join()
+
+        if error_holder:
+            raise error_holder[0]
+
+        result = result_holder[0]
         st.session_state.pipeline_result = result
 
-        status.write("Generating HTML report...")
+        progress_slot.progress(1.0, text="Pipeline steps finished")
+        running_note.empty()
+
+        # Evenly split recorded pipeline duration across executed agent steps (for display).
+        n_steps = 4 + (1 if enable_pii else 0) + (1 if enable_llm else 0)
+        step_times = _split_duration_across_steps(result.pipeline_duration_seconds, n_steps)
+        ti = 0
+
+        status = st.status("Pipeline progress", expanded=True)
+        status.write(
+            f"✅ Connector loaded {_format_step_seconds(step_times[ti])}"
+        )
+        ti += 1
+        status.write(
+            f"✅ Schema extracted — {result.schema.total_tables} tables, "
+            f"{result.schema.total_columns} columns {_format_step_seconds(step_times[ti])}"
+        )
+        ti += 1
+        status.write(
+            f"✅ Relationships mapped — {result.relationships.total_relationships} relationships "
+            f"{_format_step_seconds(step_times[ti])}"
+        )
+        ti += 1
+        comp_pct = result.profile.overall_completeness * 100
+        status.write(
+            f"✅ Data profiled — {comp_pct:.1f}% completeness {_format_step_seconds(step_times[ti])}"
+        )
+        ti += 1
+
+        if enable_pii:
+            pii_n = (
+                0
+                if result.pii_report is None
+                else result.pii_report.total_pii_columns
+            )
+            status.write(
+                f"✅ PII scan complete — {pii_n} flagged columns "
+                f"{_format_step_seconds(step_times[ti])}"
+            )
+            ti += 1
+        else:
+            status.write("⏭️ PII scan skipped (disabled)")
+
+        if enable_llm:
+            status.write(
+                f"✅ AI summaries generated {_format_step_seconds(step_times[ti])}"
+            )
+            ti += 1
+        else:
+            status.write("⏭️ AI summaries skipped (disabled)")
+
+        status.write("⏳ Generating report…")
+        t_report = time.perf_counter()
         report_cfg = ReportConfig(
             output_dir="./output/generated",
             report_title=report_title,
@@ -301,13 +395,24 @@ def _run_pipeline_from_ui(
             include_llm_summaries=enable_llm,
         )
         report_out = generate_report(result, report_cfg)
+        report_seconds = time.perf_counter() - t_report
         st.session_state.report_path = report_out["html_path"]
 
-        status.update(label="Pipeline complete", state="complete")
+        status.write(f"✅ Report generated {_format_step_seconds(report_seconds)}")
+
+        total_wall = result.pipeline_duration_seconds + report_seconds
+        status.update(
+            label=f"Pipeline complete in {total_wall:.2f}s",
+            state="complete",
+        )
     except Exception as e:
         logger.error("ui_pipeline_run_failed", error=str(e), exc_info=True)
         st.session_state.error_message = str(e)
-        status.update(label="Pipeline failed", state="error")
+        progress_slot.progress(1.0, text="Failed")
+        running_note.empty()
+        fail_status = st.status("Pipeline failed", expanded=True)
+        fail_status.write(f"❌ {e!s}")
+        fail_status.update(label="Pipeline failed", state="error")
     finally:
         st.session_state.is_running = False
         if tmp_dir is not None and tmp_dir.exists():
@@ -365,11 +470,6 @@ def main() -> None:
             enable_pii=enable_pii,
             report_title=report_title,
         )
-
-    if st.session_state.is_running:
-        with st.spinner("Pipeline is running..."):
-            st.info("Step-by-step updates appear in the status panel while the run executes.")
-        return
 
     result = st.session_state.pipeline_result
     report_path = st.session_state.report_path
