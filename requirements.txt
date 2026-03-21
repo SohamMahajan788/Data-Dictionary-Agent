@@ -1,0 +1,46 @@
+# Core
+pandas
+sqlalchemy
+numpy
+
+# Database connectors
+psycopg2-binary
+pymysql
+
+# Profiling
+ydata-profiling
+great-expectations
+
+# PII Detection
+presidio-analyzer
+presidio-anonymizer
+spacy
+
+# Relationship mapping
+networkx
+
+# LLM
+anthropic
+python-dotenv
+
+# Async / Queue
+celery
+redis
+
+# Output
+jinja2
+weasyprint
+pyyaml
+
+# API
+fastapi
+uvicorn
+
+# UI
+streamlit
+
+# Logging
+structlog
+
+# Testing
+pytest
