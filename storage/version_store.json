@@ -1,0 +1,314 @@
+{
+  "snapshots": [
+    {
+      "snapshot_id": "2cf6e933-b148-453c-bd05-83ee725b9685",
+      "source_path": "C:\\Users\\mahaj\\Desktop\\VIT APEX\\Main Build\\data-dictionary-agent\\sample_data\\chinook\\Chinook_Sqlite.sqlite",
+      "captured_at": "2026-03-21T06:13:50.350953+00:00",
+      "table_names": [
+        "Album",
+        "Artist",
+        "Customer",
+        "Employee",
+        "Genre",
+        "Invoice",
+        "InvoiceLine",
+        "MediaType",
+        "Playlist",
+        "PlaylistTrack",
+        "Track"
+      ],
+      "column_counts": {
+        "Album": 3,
+        "Artist": 2,
+        "Customer": 13,
+        "Employee": 15,
+        "Genre": 2,
+        "Invoice": 9,
+        "InvoiceLine": 5,
+        "MediaType": 2,
+        "Playlist": 2,
+        "PlaylistTrack": 2,
+        "Track": 9
+      },
+      "row_counts": {
+        "Album": 347,
+        "Artist": 275,
+        "Customer": 59,
+        "Employee": 8,
+        "Genre": 25,
+        "Invoice": 412,
+        "InvoiceLine": 2240,
+        "MediaType": 5,
+        "Playlist": 18,
+        "PlaylistTrack": 8715,
+        "Track": 3503
+      },
+      "completeness_scores": {
+        "Album": 1.0,
+        "Artist": 1.0,
+        "Customer": 0.8305084745762712,
+        "Employee": 0.9916666666666667,
+        "Genre": 1.0,
+        "Invoice": 0.9379719525350593,
+        "InvoiceLine": 1.0,
+        "MediaType": 1.0,
+        "Playlist": 1.0,
+        "PlaylistTrack": 1.0,
+        "Track": 0.9689789704063183
+      },
+      "schema_hash": "9479ee5027481950c2a6d4a7c4bc364a"
+    },
+    {
+      "snapshot_id": "57f52d25-db7b-4444-b8f1-b6a1a34e998a",
+      "source_path": "C:\\Users\\mahaj\\Desktop\\VIT APEX\\Main Build\\data-dictionary-agent\\sample_data\\chinook\\Chinook_Sqlite.sqlite",
+      "captured_at": "2026-03-21T06:13:51.267951+00:00",
+      "table_names": [
+        "Album",
+        "Artist",
+        "Customer",
+        "Employee",
+        "Genre",
+        "Invoice",
+        "InvoiceLine",
+        "MediaType",
+        "Playlist",
+        "PlaylistTrack",
+        "Track"
+      ],
+      "column_counts": {
+        "Album": 3,
+        "Artist": 2,
+        "Customer": 13,
+        "Employee": 15,
+        "Genre": 2,
+        "Invoice": 9,
+        "InvoiceLine": 5,
+        "MediaType": 2,
+        "Playlist": 2,
+        "PlaylistTrack": 2,
+        "Track": 9
+      },
+      "row_counts": {
+        "Album": 347,
+        "Artist": 275,
+        "Customer": 59,
+        "Employee": 8,
+        "Genre": 25,
+        "Invoice": 412,
+        "InvoiceLine": 2240,
+        "MediaType": 5,
+        "Playlist": 18,
+        "PlaylistTrack": 8715,
+        "Track": 3503
+      },
+      "completeness_scores": {
+        "Album": 1.0,
+        "Artist": 1.0,
+        "Customer": 0.8305084745762712,
+        "Employee": 0.9916666666666667,
+        "Genre": 1.0,
+        "Invoice": 0.9379719525350593,
+        "InvoiceLine": 1.0,
+        "MediaType": 1.0,
+        "Playlist": 1.0,
+        "PlaylistTrack": 1.0,
+        "Track": 0.9689789704063183
+      },
+      "schema_hash": "9479ee5027481950c2a6d4a7c4bc364a"
+    }
+  ],
+  "drift_reports": [
+    {
+      "snapshot_id_before": "2cf6e933-b148-453c-bd05-83ee725b9685",
+      "snapshot_id_after": "57f52d25-db7b-4444-b8f1-b6a1a34e998a",
+      "captured_at": "2026-03-21T06:13:51.270468+00:00",
+      "source_path": "C:\\Users\\mahaj\\Desktop\\VIT APEX\\Main Build\\data-dictionary-agent\\sample_data\\chinook\\Chinook_Sqlite.sqlite",
+      "tables_added": [],
+      "tables_removed": [],
+      "columns_added": {},
+      "columns_removed": {},
+      "completeness_changes": {},
+      "row_count_changes": {},
+      "has_breaking_changes": false,
+      "summary": "No drift detected between snapshots."
+    }
+  ],
+  "snapshot_columns": {
+    "2cf6e933-b148-453c-bd05-83ee725b9685": {
+      "Album": [
+        "AlbumId",
+        "ArtistId",
+        "Title"
+      ],
+      "Artist": [
+        "ArtistId",
+        "Name"
+      ],
+      "Customer": [
+        "Address",
+        "City",
+        "Company",
+        "Country",
+        "CustomerId",
+        "Email",
+        "Fax",
+        "FirstName",
+        "LastName",
+        "Phone",
+        "PostalCode",
+        "State",
+        "SupportRepId"
+      ],
+      "Employee": [
+        "Address",
+        "BirthDate",
+        "City",
+        "Country",
+        "Email",
+        "EmployeeId",
+        "Fax",
+        "FirstName",
+        "HireDate",
+        "LastName",
+        "Phone",
+        "PostalCode",
+        "ReportsTo",
+        "State",
+        "Title"
+      ],
+      "Genre": [
+        "GenreId",
+        "Name"
+      ],
+      "Invoice": [
+        "BillingAddress",
+        "BillingCity",
+        "BillingCountry",
+        "BillingPostalCode",
+        "BillingState",
+        "CustomerId",
+        "InvoiceDate",
+        "InvoiceId",
+        "Total"
+      ],
+      "InvoiceLine": [
+        "InvoiceId",
+        "InvoiceLineId",
+        "Quantity",
+        "TrackId",
+        "UnitPrice"
+      ],
+      "MediaType": [
+        "MediaTypeId",
+        "Name"
+      ],
+      "Playlist": [
+        "Name",
+        "PlaylistId"
+      ],
+      "PlaylistTrack": [
+        "PlaylistId",
+        "TrackId"
+      ],
+      "Track": [
+        "AlbumId",
+        "Bytes",
+        "Composer",
+        "GenreId",
+        "MediaTypeId",
+        "Milliseconds",
+        "Name",
+        "TrackId",
+        "UnitPrice"
+      ]
+    },
+    "57f52d25-db7b-4444-b8f1-b6a1a34e998a": {
+      "Album": [
+        "AlbumId",
+        "ArtistId",
+        "Title"
+      ],
+      "Artist": [
+        "ArtistId",
+        "Name"
+      ],
+      "Customer": [
+        "Address",
+        "City",
+        "Company",
+        "Country",
+        "CustomerId",
+        "Email",
+        "Fax",
+        "FirstName",
+        "LastName",
+        "Phone",
+        "PostalCode",
+        "State",
+        "SupportRepId"
+      ],
+      "Employee": [
+        "Address",
+        "BirthDate",
+        "City",
+        "Country",
+        "Email",
+        "EmployeeId",
+        "Fax",
+        "FirstName",
+        "HireDate",
+        "LastName",
+        "Phone",
+        "PostalCode",
+        "ReportsTo",
+        "State",
+        "Title"
+      ],
+      "Genre": [
+        "GenreId",
+        "Name"
+      ],
+      "Invoice": [
+        "BillingAddress",
+        "BillingCity",
+        "BillingCountry",
+        "BillingPostalCode",
+        "BillingState",
+        "CustomerId",
+        "InvoiceDate",
+        "InvoiceId",
+        "Total"
+      ],
+      "InvoiceLine": [
+        "InvoiceId",
+        "InvoiceLineId",
+        "Quantity",
+        "TrackId",
+        "UnitPrice"
+      ],
+      "MediaType": [
+        "MediaTypeId",
+        "Name"
+      ],
+      "Playlist": [
+        "Name",
+        "PlaylistId"
+      ],
+      "PlaylistTrack": [
+        "PlaylistId",
+        "TrackId"
+      ],
+      "Track": [
+        "AlbumId",
+        "Bytes",
+        "Composer",
+        "GenreId",
+        "MediaTypeId",
+        "Milliseconds",
+        "Name",
+        "TrackId",
+        "UnitPrice"
+      ]
+    }
+  }
+}
