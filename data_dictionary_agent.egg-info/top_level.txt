@@ -1,9 +1,0 @@
-agents
-api
-config
-connectors
-orchestrator
-output
-storage
-tests
-ui
